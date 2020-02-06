@@ -29,8 +29,11 @@ module.exports.createArticle = (req, res, next) => {
 module.exports.deleteArticle = (req, res, next) => {
   const { articleId } = req.params;
   const ownerId = req.user._id;
-  Article.findById(articleId)
+  Article.findById(articleId).select('+owner')
     .then((article) => {
+      if (!article) {
+        throw new Error('Не найден идентификатор с таким ID');
+      }
       if (!article.owner.toString() === ownerId) {
         throw new NotHaveAccess();
       }
