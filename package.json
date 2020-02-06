@@ -1,0 +1,29 @@
+{
+  "name": "news-explorer-api",
+  "version": "1.0.0",
+  "description": "My backend project for Yandex Praktikum",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppridanov/news-explorer-api.git"
+  },
+  "author": "Petr Pridanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ppridanov/news-explorer-api/issues"
+  },
+  "homepage": "https://github.com/ppridanov/news-explorer-api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.11",
+    "validator": "^12.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
