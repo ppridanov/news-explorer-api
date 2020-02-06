@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 require('dotenv').config();
 
+const { MONGOOSE_BASEURL } = process.env;
 const { createUser, login } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
@@ -13,7 +14,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/newsdb', {
+mongoose.connect(MONGOOSE_BASEURL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,

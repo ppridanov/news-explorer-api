@@ -66,9 +66,9 @@ module.exports.login = (req, res, next) => {
 };
 
 // Получить своего пользователя
-module.exports.getUser = (req, res, next) => {
+module.exports.getUser = async (req, res, next) => {
   const userId = req.user._id;
-  User.findById(userId, (err, user) => {
+  await User.findById(userId, (err, user) => {
     try {
       if (err != undefined || user == undefined) {
         throw new NotFoundError('Пользователь с такий ID не найден');
