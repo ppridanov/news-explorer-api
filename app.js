@@ -38,4 +38,15 @@ app.post('/signin', login);
 app.use('/', require('./routes/articles'));
 app.use('/', require('./routes/users'));
 
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'Произошла ошибка, обратитесь к администратору'
+        : message,
+    });
+});
 app.listen(PORT);

@@ -2,6 +2,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-error');
+const BadRequest = require('../errors/bad-request-error');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -20,10 +22,10 @@ module.exports.createUser = (req, res, next) => {
         try {
           if (err != undefined || user == undefined) {
             if (err.code === 11000) {
-              next(new Error('Такой почтовый ящик уже существует'));
+              next(new BadRequest('Такой почтовый ящик уже существует'));
               return;
             }
-            next(new Error('Проверьте правильность введенных данных'));
+            next(new BadRequest('Проверьте правильность введенных данных'));
           }
           res.send({ message: 'Пользователь успешно создан' });
         } catch (err) {
@@ -40,14 +42,14 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new Error('Проверьте правильность ввода учетных данных');
+        throw new BadRequest('Проверьте правильность ввода учетных данных');
       }
       userId = user._id;
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {
       if (!matched) {
-        throw new Error('Проверьте правильность ввода учетных данных');
+        throw new BadRequest('Проверьте правильность ввода учетных данных');
       }
       const token = jwt.sign({ _id: userId }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res
@@ -69,7 +71,7 @@ module.exports.getUser = (req, res, next) => {
   User.findById(userId, (err, user) => {
     try {
       if (err != undefined || user == undefined) {
-        throw new Error('Пользователь с такий ID не найден');
+        throw new NotFoundError('Пользователь с такий ID не найден');
       }
       res.send(user);
     } catch (err) {
