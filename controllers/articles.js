@@ -4,7 +4,8 @@ const NotFoundError = require('../errors/not-found-error');
 const AccessError = require('../errors/access-error');
 
 module.exports.getAllArticles = (req, res, next) => {
-  Article.find({})
+  const ownerId = req.user._id;
+  Article.find({ owner: ownerId })
     .then((article) => {
       res.send(article);
     })
@@ -35,7 +36,7 @@ module.exports.deleteArticle = (req, res, next) => {
       if (!article) {
         throw new NotFoundError('Не найден идентификатор с таким ID');
       }
-      if (!article.owner.toString() === ownerId) {
+      if (article.owner.toString() !== ownerId) {
         throw new AccessError('У вас нет доступа к удалению чужих карточек ');
       }
       Article.findByIdAndRemove(articleId)

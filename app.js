@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const helmet = require('helmet');
+const limiter = require('./middlewars/limiter');
 require('dotenv').config();
 
 const { MONGOOSE_BASEURL } = process.env;
@@ -13,26 +15,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-
+app.use(helmet.xssFilter());
+app.use(helmet.frameguard());
+app.use(limiter);
 mongoose.connect(MONGOOSE_BASEURL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 })
-  .then(() => {
-    console.log('Mongodb connected');
-  })
-  .catch((err) => {
-    console.log(err);
-    process.exit(1);
-  });
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5d8b8592978f8bd833ca8133',
-  };
+  .then(() => console.log('Base connected'))
+  .catch((err) => console.log(err));
 
-  next();
-});
 app.use(cookieParser());
 app.post('/signup', createUser);
 app.post('/signin', login);

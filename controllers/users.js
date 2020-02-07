@@ -2,8 +2,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const NotFoundError = require('../errors/not-found-error');
 const BadRequest = require('../errors/bad-request-error');
+const {
+  userCreatedMsg,
+  userJoinMsg,
+  notValidMsg,
+  emailNotUniqueMsg,
+} = require('../middlewars/errors-success-msg');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -22,12 +27,12 @@ module.exports.createUser = (req, res, next) => {
         try {
           if (err != undefined || user == undefined) {
             if (err.code === 11000) {
-              next(new BadRequest('Такой почтовый ящик уже существует'));
+              next(new BadRequest(emailNotUniqueMsg));
               return;
             }
-            next(new BadRequest('Проверьте правильность введенных данных'));
+            next(new BadRequest(notValidMsg));
           }
-          res.send({ message: 'Пользователь успешно создан' });
+          res.send({ message: userCreatedMsg });
         } catch (err) {
           next(err);
         }
@@ -42,14 +47,14 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new BadRequest('Проверьте правильность ввода учетных данных');
+        throw new BadRequest(notValidMsg);
       }
       userId = user._id;
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {
       if (!matched) {
-        throw new BadRequest('Проверьте правильность ввода учетных данных');
+        throw new BadRequest(notValidMsg);
       }
       const token = jwt.sign({ _id: userId }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res
@@ -59,23 +64,21 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .send({ message: 'Успешный вход' })
+        .send({
+          message: userJoinMsg,
+          jwt: token,
+        })
         .end();
     })
     .catch(next);
 };
 
 // Получить своего пользователя
-module.exports.getUser = async (req, res, next) => {
+module.exports.getUser = (req, res, next) => {
   const userId = req.user._id;
-  await User.findById(userId, (err, user) => {
-    try {
-      if (err != undefined || user == undefined) {
-        throw new NotFoundError('Пользователь с такий ID не найден');
-      }
+  User.findById(userId)
+    .then((user) => {
       res.send(user);
-    } catch (err) {
-      next(err);
-    }
-  });
+    })
+    .catch(next);
 };
