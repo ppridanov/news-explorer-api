@@ -2,6 +2,7 @@
 const Article = require('../models/article');
 const NotFoundError = require('../errors/not-found-error');
 const AccessError = require('../errors/access-error');
+const { notFoundIdMsg, accessErrMsg } = require('../middlewars/errors-success-msg');
 
 module.exports.getAllArticles = (req, res, next) => {
   const ownerId = req.user._id;
@@ -34,15 +35,15 @@ module.exports.deleteArticle = (req, res, next) => {
   Article.findById(articleId).select('+owner')
     .then((article) => {
       if (!article) {
-        throw new NotFoundError('Не найден идентификатор с таким ID');
+        throw new NotFoundError(notFoundIdMsg);
       }
       if (article.owner.toString() !== ownerId) {
-        throw new AccessError('У вас нет доступа к удалению чужих карточек ');
+        throw new AccessError(accessErrMsg);
       }
       Article.findByIdAndRemove(articleId)
         .then((article) => {
           if (!article) {
-            throw new NotFoundError('Не найден идентификатор с таким ID');
+            throw new NotFoundError(notFoundIdMsg);
           }
           res.send(article);
         })
