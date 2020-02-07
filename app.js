@@ -5,10 +5,10 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const limiter = require('./middlewars/limiter');
+const { serverErrMsg, baseConnMgs } = require('./middlewars/errors-success-msg');
 require('dotenv').config();
 
 const { MONGOOSE_BASEURL } = process.env;
-const { createUser, login } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -23,14 +23,11 @@ mongoose.connect(MONGOOSE_BASEURL, {
   useCreateIndex: true,
   useFindAndModify: false,
 })
-  .then(() => console.log('Base connected'))
+  .then(() => console.log(baseConnMgs))
   .catch((err) => console.log(err));
 
 app.use(cookieParser());
-app.post('/signup', createUser);
-app.post('/signin', login);
-app.use('/', require('./routes/articles'));
-app.use('/', require('./routes/users'));
+app.use('/', require('./routes/index'));
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
@@ -39,7 +36,7 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === 500
-        ? 'Произошла ошибка, обратитесь к администратору'
+        ? serverErrMsg
         : message,
     });
 });

@@ -8,6 +8,7 @@ const {
   userJoinMsg,
   notValidMsg,
   emailNotUniqueMsg,
+  passNotValidMsg,
 } = require('../middlewars/errors-success-msg');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -15,6 +16,13 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Создание пользователя
 module.exports.createUser = (req, res, next) => {
+  try {
+    if (req.body.password.length <= 8) {
+      throw new BadRequest(passNotValidMsg);
+    }
+  } catch (err) {
+    return next(err);
+  }
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
       User.create({
@@ -31,6 +39,7 @@ module.exports.createUser = (req, res, next) => {
               return;
             }
             next(new BadRequest(notValidMsg));
+            return;
           }
           res.send({ message: userCreatedMsg });
         } catch (err) {
