@@ -4,11 +4,12 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewars/logger');
 const limiter = require('./middlewars/limiter');
-const { serverErrMsg, baseConnMgs } = require('./middlewars/errors-success-msg');
+const { mongoUrl } = require('./middlewars/config');
+const { errHandler, notFoundErrHandler } = require('./middlewars/error-handlers');
 require('dotenv').config();
-
-const { MONGOOSE_BASEURL } = process.env;
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,26 +19,25 @@ app.use(cors());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
 app.use(limiter);
-mongoose.connect(MONGOOSE_BASEURL, {
+
+mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 })
-  .then(() => console.log(baseConnMgs))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log(err.message));
+
+
+app.use(requestLogger);
 
 app.use(cookieParser());
 app.use('/', require('./routes/index'));
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? serverErrMsg
-        : message,
-    });
-});
+app.use(errorLogger);
+app.use(errors());
+
+app.use('*', notFoundErrHandler);
+app.use(errHandler);
+
+
 app.listen(PORT);

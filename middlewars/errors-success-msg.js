@@ -10,7 +10,8 @@ const passNotValidMsg = 'Пароль должен содержать не ме�
 const accessErrMsg = 'У вас нет доступа к удалению чужих карточек';
 const notValidMsg = 'Проверьте правильность ввода учетных данных';
 const serverErrMsg = 'Произошла ошибка, обратитесь к администратору';
-
+const pageErrMsg = 'Запрашиваемая страница не найдена';
+const baseConnErrMsg = 'Ошибка подключения к MongoDB';
 
 module.exports = {
   userCreatedMsg,
@@ -22,4 +23,6 @@ module.exports = {
   notValidMsg,
   passNotValidMsg,
   serverErrMsg,
+  pageErrMsg,
+  baseConnErrMsg,
 };

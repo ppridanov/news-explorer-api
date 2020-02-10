@@ -1,6 +1,8 @@
+const { serverErrMsg } = require('../middlewars/errors-success-msg');
+
 class InternalError extends Error {
   constructor() {
-    super('Произошла ошибка, обратитесь к администратору');
+    super(serverErrMsg);
     this.statusCode = 500;
   }
 }

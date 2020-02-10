@@ -4,6 +4,7 @@ const NotFoundError = require('../errors/not-found-error');
 const AccessError = require('../errors/access-error');
 const { notFoundIdMsg, accessErrMsg } = require('../middlewars/errors-success-msg');
 
+// Получаем все новости пользователя
 module.exports.getAllArticles = (req, res, next) => {
   const ownerId = req.user._id;
   Article.find({ owner: ownerId })

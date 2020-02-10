@@ -10,6 +10,7 @@ const {
   emailNotUniqueMsg,
   passNotValidMsg,
 } = require('../middlewars/errors-success-msg');
+const { devSecret } = require('../middlewars/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -17,7 +18,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // Создание пользователя
 module.exports.createUser = (req, res, next) => {
   try {
-    if (req.body.password.length <= 8) {
+    if (req.body.password.length < 8) {
       throw new BadRequest(passNotValidMsg);
     }
   } catch (err) {
@@ -65,7 +66,7 @@ module.exports.login = (req, res, next) => {
       if (!matched) {
         throw new BadRequest(notValidMsg);
       }
-      const token = jwt.sign({ _id: userId }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: userId }, NODE_ENV === 'production' ? JWT_SECRET : devSecret, { expiresIn: '7d' });
       res
         .status(200)
         .cookie('jwt', token, {
