@@ -1,5 +1,6 @@
 # news-explorer-api
 Backend News Api Yandex Praktikum
+------------
 Ссылка на проект [Дипломная работа по бэкенду](https://github.com/ppridanov/news-explorer-api/).
 
 ## Описание
