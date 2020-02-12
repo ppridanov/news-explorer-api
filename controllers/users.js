@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BadRequest = require('../errors/bad-request-error');
+const AccessError = require('../errors/access-error');
 const {
   userCreatedMsg,
   userJoinMsg,
@@ -57,14 +58,14 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new BadRequest(notValidMsg);
+        throw new AccessError(notValidMsg);
       }
       userId = user._id;
       return bcrypt.compare(password, user.password);
     })
     .then((matched) => {
       if (!matched) {
-        throw new BadRequest(notValidMsg);
+        throw new AccessError(notValidMsg);
       }
       const token = jwt.sign({ _id: userId }, NODE_ENV === 'production' ? JWT_SECRET : devSecret, { expiresIn: '7d' });
       res

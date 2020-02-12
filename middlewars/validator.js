@@ -1,4 +1,12 @@
 const { celebrate, Joi } = require('celebrate');
+const {
+  checkNameMsg,
+  checkEmailMsg,
+  checkPassMsg,
+  checkDataMsg,
+  checkLinkMsg,
+  checkImageMsg,
+} = require('../scripts/validator-msg');
 
 module.exports.newUserValidator = celebrate({
   body: Joi.object().keys({
@@ -6,16 +14,16 @@ module.exports.newUserValidator = celebrate({
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенного имени'),
+      .label(checkNameMsg),
     email: Joi.string()
       .required()
       .email({ minDomainSegments: 2, tlds: { allow: false } })
-      .label('Проверьте правильность введенного адреса электронной почты'),
+      .label(checkEmailMsg),
     password: Joi.string()
       .required()
       .min(8)
       .pattern(/^[a-zA-Z0-9]{3,30}$/)
-      .label('Проверьте правильность введенного пароля. Пароль должен содержать не менее 8 символов'),
+      .label(checkPassMsg),
   }),
 });
 
@@ -25,12 +33,12 @@ module.exports.loginValidator = celebrate({
     email: Joi.string()
       .required()
       .email({ minDomainSegments: 2, tlds: { allow: false } })
-      .label('Проверьте правильность введенного адреса электронной почты'),
+      .label(checkEmailMsg),
     password: Joi.string()
       .required()
       .min(8)
       .pattern(/^[a-zA-Z0-9]{3,30}$/)
-      .label('Проверьте правильность введенного пароля. Пароль должен содержать не менее 8 символов'),
+      .label(checkPassMsg),
   }),
 });
 
@@ -40,34 +48,34 @@ module.exports.articleCreateValidator = celebrate({
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенных данных'),
+      .label(checkDataMsg),
     title: Joi.string()
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенных данных'),
+      .label(checkDataMsg),
     text: Joi.string()
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенных данных'),
+      .label(checkDataMsg),
     date: Joi.string()
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенных данных'),
+      .label(checkDataMsg),
     source: Joi.string()
       .required()
       .min(2)
       .max(30)
-      .label('Проверьте правильность введенных данных'),
+      .label(checkDataMsg),
     link: Joi.string()
       .required()
       .pattern(/^https?:\/\//)
-      .label('Проверьте правильность введеного URL ссылки на новость'),
+      .label(checkLinkMsg),
     image: Joi.string()
       .required()
       .pattern(/^https?:\/\//)
-      .label('Проверьте правильность введеного URL ссылки на картинку'),
+      .label(checkImageMsg),
   }),
 });
