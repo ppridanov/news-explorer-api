@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { checkLinkMsg, checkImageMsg } = require('../scripts/validator-msg');
 
 const articleSchema = new mongoose.Schema({
   keyword: {
@@ -28,7 +29,7 @@ const articleSchema = new mongoose.Schema({
       validator(v) {
         return /^https?:\/\//.test(v);
       },
-      message: (props) => `${props.value} это не правильная ссылка!`,
+      message: checkLinkMsg,
     },
   },
   image: {
@@ -38,7 +39,7 @@ const articleSchema = new mongoose.Schema({
       validator(v) {
         return /^https?:\/\//.test(v);
       },
-      message: (props) => `${props.value} это не правильная ссылка!`,
+      message: checkImageMsg,
     },
   },
   owner: {

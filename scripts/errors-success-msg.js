@@ -7,11 +7,12 @@ const baseConnMgs = 'MongoDB успешно подключена';
 const notFoundIdMsg = 'Не найден идентификатор с таким ID';
 const emailNotUniqueMsg = 'Такой почтовый ящик уже существует';
 const passNotValidMsg = 'Пароль должен содержать не менее 8 символов';
-const accessErrMsg = 'У вас нет доступа к удалению чужих карточек';
+const deleteArticleErrMsg = 'У вас нет доступа к удалению чужих карточек';
 const notValidMsg = 'Проверьте правильность ввода учетных данных';
 const serverErrMsg = 'Произошла ошибка, обратитесь к администратору';
 const pageErrMsg = 'Запрашиваемая страница не найдена';
 const baseConnErrMsg = 'Ошибка подключения к MongoDB';
+const accessErrMsg = 'Доступ запрещен. Необходима авторизация';
 
 module.exports = {
   userCreatedMsg,
@@ -19,10 +20,11 @@ module.exports = {
   baseConnMgs,
   notFoundIdMsg,
   emailNotUniqueMsg,
-  accessErrMsg,
+  deleteArticleErrMsg,
   notValidMsg,
   passNotValidMsg,
   serverErrMsg,
   pageErrMsg,
   baseConnErrMsg,
+  accessErrMsg,
 };

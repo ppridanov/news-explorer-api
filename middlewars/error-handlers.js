@@ -1,4 +1,4 @@
-const { serverErrMsg, pageErrMsg } = require('./errors-success-msg');
+const { serverErrMsg, pageErrMsg } = require('../scripts/errors-success-msg');
 const NotFoundError = require('../errors/not-found-error');
 
 module.exports.errHandler = ((err, req, res, next) => {

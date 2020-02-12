@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewars/logger');
 const limiter = require('./middlewars/limiter');
-const { mongoUrl } = require('./middlewars/config');
+const { mongoUrl } = require('./scripts/config');
 const { errHandler, notFoundErrHandler } = require('./middlewars/error-handlers');
 require('dotenv').config();
 

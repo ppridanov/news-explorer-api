@@ -2,7 +2,7 @@
 const Article = require('../models/article');
 const NotFoundError = require('../errors/not-found-error');
 const AccessError = require('../errors/access-error');
-const { notFoundIdMsg, accessErrMsg } = require('../middlewars/errors-success-msg');
+const { notFoundIdMsg, accessErrMsg } = require('../scripts/errors-success-msg');
 
 // Получаем все новости пользователя
 module.exports.getAllArticles = (req, res, next) => {

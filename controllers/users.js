@@ -9,8 +9,8 @@ const {
   notValidMsg,
   emailNotUniqueMsg,
   passNotValidMsg,
-} = require('../middlewars/errors-success-msg');
-const { devSecret } = require('../middlewars/config');
+} = require('../scripts/errors-success-msg');
+const { devSecret } = require('../scripts/config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
