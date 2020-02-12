@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const AccessError = require('../errors/access-error');
 const { devSecret } = require('../scripts/config');
-const accessErrMsg = require('../scripts/errors-success-msg');
+const { accessErrMsg } = require('../scripts/errors-success-msg');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
